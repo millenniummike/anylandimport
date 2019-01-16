@@ -19,25 +19,13 @@
 # <pep8-80 compliant>
 
 """
-This script imports JSON format files to Blender.
-
-The JSON Ngon format is very simple; 
-Examine a basic file to make sense of it (create a cube in blender and use the JSON export function!
-
-Usage:
-Execute this script from the "File->Import" menu and choose a Raw file to
-open.
-
-Notes:
-Generates the standard verts and faces lists, but without duplicate
-verts. Only *exact* duplicates are removed, there is no way to specify a
-tolerance.
+This script imports Anyland JSON format files to Blender.
 """
 
 import bpy
 import os
 import json
-from math import pi
+from math import radians
 from mathutils import Euler
 
 def readJSON(filename, objName):
@@ -90,12 +78,11 @@ def loadObj(objNumber,sx,sy,sz,px,py,pz,rx,ry,rz,r,g,b):
     imported_object = bpy.ops.import_scene.obj(filepath=file_loc)
     obj = bpy.context.selected_objects[0] ####<--Fix
     obj.scale = (sx,sy,sz)
-    obj.location = (px*-1,pz*-1,py) # left hand co-ordinates to right hand co-ordinates
-    obj.rotation_euler = Euler((pi / 180 * (180 - rx),pi / 180 * (180 - rz),pi / 180 * ry), 'XYZ')
-    obj.active_material.diffuse_color = (r*255,g*255,b*255)
+    obj.location = (px, py, pz) # left hand co-ordinates to right hand co-ordinates
+    obj.rotation_euler = (radians(rx+90),radians(ry),radians(rz))
+    obj.active_material.diffuse_color = (r,g,b)
 
 def read(filepath):
     #convert the filename to an object name
     objName = bpy.path.display_name_from_filepath(filepath)
     mesh = readJSON(filepath, objName)
-    #loadObj(2,100,100,100,5,5,0)
