@@ -31,17 +31,20 @@ public class Import : MonoBehaviour {
 				float ry = o["s"][0]["r"][1].n;
 				float rz = o["s"][0]["r"][2].n;
 
+				float cx = o["s"][0]["c"][0].n;
+				float cy = o["s"][0]["c"][1].n;
+				float cz = o["s"][0]["c"][2].n;
+
 				int b = 1;
 				if (o["b"] != null) {
 					b = (int) o["b"].i;
 				}
-
-				if (b>0) {
 					GameObject newObject = Instantiate(prefab[b-1], new Vector3(px, py, pz), Quaternion.identity);
 					newObject.transform.localScale = new Vector3(sx, sy, sz);
 					newObject.transform.rotation = Quaternion.Euler(rx,ry,rz);
 					newObject.transform.parent = group.transform;
-				}	
+					Renderer rend = newObject.transform.GetChild(0).GetComponent<Renderer>();
+					rend.material.SetColor("_Color", new Color(cx,cy,cz));	
 			}
         }
     }
