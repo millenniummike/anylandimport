@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,16 +8,24 @@ using SimpleJSON;
 
 public class Import : MonoBehaviour {
 
-	public GameObject[] prefab;
-	public GameObject group;
-    public void LoadJson()
+    [MenuItem("Anyland/LoadJson")]
+    static void MenuLoad()
     {
-        using (StreamReader r = new StreamReader("Assets/testJSON/truck.json"))
-        {
-            string jsontext = r.ReadToEnd();
-            Debug.Log(jsontext);
-			
-			 var json = new JSONObject(jsontext);    
+        Import.LoadJson();
+    }
+    static void LoadJson()
+    {
+		string path = EditorUtility.OpenFilePanel("Open json", "", "json");
+        if (path.Length != 0)
+        {		
+			using (StreamReader r = new StreamReader(path))
+			{
+			string jsontext = r.ReadToEnd();
+			 Debug.Log(jsontext);
+			 var json = new JSONObject(jsontext); 
+			 GameObject parent = new GameObject();
+			 string name = "Thing Name";
+			 parent.name = name;
 			foreach(JSONObject o in json["p"])
 			{
 				float px = o["s"][0]["p"][0].n;
@@ -39,22 +48,18 @@ public class Import : MonoBehaviour {
 				if (o["b"] != null) {
 					b = (int) o["b"].i;
 				}
-					GameObject newObject = Instantiate(prefab[b-1], new Vector3(px, py, pz), Quaternion.identity);
+					GameObject objectLoaded = Resources.Load("" + b, typeof(GameObject)) as GameObject;
+					GameObject newObject = Instantiate(objectLoaded, new Vector3(px, py, pz), Quaternion.identity);
 					newObject.transform.localScale = new Vector3(sx, sy, sz);
-					newObject.transform.rotation = Quaternion.Euler(rx,ry,rz);
-					newObject.transform.parent = group.transform;
+					newObject.transform.localEulerAngles = new Vector3(rx, ry, rz);
+					newObject.transform.SetParent(parent.transform);
+					newObject.name = ""+b;
 					Renderer rend = newObject.transform.GetChild(0).GetComponent<Renderer>();
-					rend.material.SetColor("_Color", new Color(cx,cy,cz));	
-			}
+					 var tempMaterial = new Material(rend.sharedMaterial);
+ 					tempMaterial.color = new Color(cx,cy,cz);
+ 					rend.sharedMaterial = tempMaterial;
+				}
+        	}
         }
     }
-	// Use this for initialization
-	void Start () {
-		LoadJson();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
