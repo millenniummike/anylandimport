@@ -10,11 +10,13 @@ add the folder "io_import_anyland" to Blender\2.79\scripts\addons
 
 Open user preferences and enable Import to Anyland JSON plugin
 
-WIP: Rotation is not correct in blender imports yet
+![Screenshot](Screenshot.PNG)
+
 ---
 For Unity open the project
 Goto menu Anyland - Load Json
 Select file to import
 ---
 
-![Screenshot](Screenshot.PNG)
+![Screenshot](Blender.PNG)
+
