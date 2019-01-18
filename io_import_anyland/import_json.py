@@ -19,14 +19,35 @@
 # <pep8-80 compliant>
 
 """
-This script imports Anyland JSON format files to Blender.
+This script imports JSON format files to Blender.
+
+The JSON Ngon format is very simple; 
+Examine a basic file to make sense of it (create a cube in blender and use the JSON export function!
+
+Usage:
+Execute this script from the "File->Import" menu and choose a Raw file to
+open.
+
+Notes:
+Generates the standard verts and faces lists, but without duplicate
+verts. Only *exact* duplicates are removed, there is no way to specify a
+tolerance.
 """
 
 import bpy
 import os
 import json
+from math import pi
+from mathutils import Euler,Quaternion
 from math import radians
-from mathutils import Euler
+
+def createEmpty(passedName):
+    try:
+        ob = bpy.data.objects.new(passedName, None)
+        bpy.context.scene.objects.link(ob)
+    except:
+        ob = None
+    return ob
 
 def readJSON(filename, objName):
     # Open the input file
@@ -45,7 +66,7 @@ def readJSON(filename, objName):
 
     jsonObject = json.loads(data)
 
-    # print the keys and values
+    parentObj = createEmpty("Anyland Thing")
     for item in jsonObject['p']:
         
         try:
@@ -67,22 +88,24 @@ def readJSON(filename, objName):
         color2 = item['s'][0]['c'][1]
         color3 = item['s'][0]['c'][2]
 
-        loadObj(objNumber,sx,sy,sz,px,py,pz,rx,ry,rz,color1,color2,color3)
+        loadObj(objNumber,sx,sy,sz,px,py,pz,rx,ry,rz,color1,color2,color3, parentObj)
     pass
 
 
-def loadObj(objNumber,sx,sy,sz,px,py,pz,rx,ry,rz,r,g,b):
+def loadObj(objNumber,sx,sy,sz,px,py,pz,rx,ry,rz,r,g,b,parentObj):
     # load object
     file_loc = os.path.dirname(os.path.abspath(__file__)) + '\\baseShapes\\' + str(objNumber) + '.obj'
 
     imported_object = bpy.ops.import_scene.obj(filepath=file_loc)
     obj = bpy.context.selected_objects[0] ####<--Fix
     obj.scale = (sx,sy,sz)
-    obj.location = (px, py, pz) # left hand co-ordinates to right hand co-ordinates
-    obj.rotation_euler = (radians(rx+90),radians(ry),radians(rz))
+    obj.rotation_mode = 'ZXY'
+    obj.rotation_euler = (radians(rx), radians(ry*-1), radians(rz*-1))
+    obj.location = (px*-1, py, pz) # left hand co-ordinates to right hand co-ordinates
     obj.active_material.diffuse_color = (r,g,b)
+    obj.parent = parentObj
 
 def read(filepath):
     #convert the filename to an object name
     objName = bpy.path.display_name_from_filepath(filepath)
-    mesh = readJSON(filepath, objName)
+    readJSON(filepath, objName)
