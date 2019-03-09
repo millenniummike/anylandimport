@@ -8,7 +8,7 @@ using SimpleJSON;
 
 public class Import : MonoBehaviour {
 
-    [MenuItem("Anyland/LoadJson")]
+    [MenuItem("Anyland/Import Json")]
     static void MenuLoad()
     {
         Import.LoadJson();
@@ -22,7 +22,7 @@ public class Import : MonoBehaviour {
 			{
 			string jsontext = r.ReadToEnd();
 			 Debug.Log(jsontext);
-			 var json = new JSONObject(jsontext); 
+			 var json = new JSONObject(jsontext);
 			 GameObject parent = new GameObject();
 			 string name = "Thing Name";
 			 parent.name = name;
@@ -54,6 +54,7 @@ public class Import : MonoBehaviour {
 					newObject.transform.localEulerAngles = new Vector3(rx, ry, rz);
 					newObject.transform.SetParent(parent.transform);
 					newObject.name = ""+b;
+					newObject.tag = "Part";
 					Renderer rend = newObject.transform.GetChild(0).GetComponent<Renderer>();
 					 var tempMaterial = new Material(rend.sharedMaterial);
  					tempMaterial.color = new Color(cx,cy,cz);
