@@ -55,6 +55,15 @@ public class Import : MonoBehaviour {
 					newObject.transform.SetParent(parent.transform);
 					newObject.name = ""+b;
 					newObject.tag = "Part";
+					newObject.AddComponent<Thing>();
+					foreach(JSONObject s in o["s"]){
+						newObject.GetComponent<Thing>().states.Add(s);
+						if (s["b"]) {
+							foreach(JSONObject script in s["b"]){
+							newObject.GetComponent<Thing>().scripts.Add(script.str);
+							}
+						}
+					}
 					Renderer rend = newObject.transform.GetChild(0).GetComponent<Renderer>();
 					 var tempMaterial = new Material(rend.sharedMaterial);
  					tempMaterial.color = new Color(cx,cy,cz);
