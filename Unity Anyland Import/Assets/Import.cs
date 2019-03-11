@@ -21,7 +21,6 @@ public class Import : MonoBehaviour {
 			using (StreamReader r = new StreamReader(path))
 			{
 			string jsontext = r.ReadToEnd();
-			 Debug.Log(jsontext);
 			 var json = new JSONObject(jsontext);
 			 GameObject parent = new GameObject();
 			 string name = "Thing Name";
@@ -55,12 +54,44 @@ public class Import : MonoBehaviour {
 					newObject.transform.SetParent(parent.transform);
 					newObject.name = ""+b;
 					newObject.tag = "Part";
-					newObject.AddComponent<Thing>();
+					if (!newObject.GetComponent<Part>()) {
+						newObject.AddComponent<Part>();
+					}
 					foreach(JSONObject s in o["s"]){
-						newObject.GetComponent<Thing>().states.Add(s);
+						State state = new State(b);
+
+						float px1 = s["p"][0].n;
+						float py1 = s["p"][1].n;
+						float pz1 = s["p"][2].n;
+
+						float sx1 = s["s"][0].n;
+						float sy1 = s["s"][1].n;
+						float sz1 = s["s"][2].n;
+
+						float rx1 = s["r"][0].n;
+						float ry1 = s["r"][1].n;
+						float rz1 = s["r"][2].n;
+
+						float red = s["c"][0].n;
+						float green = s["c"][1].n;
+						float blue = s["c"][2].n;
+						state.color.r=red;
+						state.color.g=green;
+						state.color.b=blue;
+						state.position.x=px1;
+						state.position.y=py1;
+						state.position.z=pz1;
+						state.scale.x=sx1;
+						state.scale.y=sy1;
+						state.scale.z=sz1;
+						state.rotation.x=rx1;
+						state.rotation.y=ry1;
+						state.rotation.z=rz1;
+
+						newObject.GetComponent<Part>().states.Add(state);
 						if (s["b"]) {
 							foreach(JSONObject script in s["b"]){
-							newObject.GetComponent<Thing>().scripts.Add(script.str);
+							state.scripts.Add(script.str);
 							}
 						}
 					}
