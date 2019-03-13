@@ -1,0 +1,310 @@
+{
+    "v": 7,
+    "a": [
+      7,
+      12,
+      18
+    ],
+    "p": [
+      {
+        "s": [
+          {
+            "p": [
+              0,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1751013,
+              0.1750995,
+              0.1750713
+            ],
+            "c": [
+              1,
+              1,
+              1
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              0.1,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750475,
+              0.1750186,
+              0.1750453
+            ],
+            "c": [
+              1,
+              0,
+              0.3428572
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              0.2,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750564,
+              0.17502,
+              0.175054
+            ],
+            "c": [
+              1,
+              0,
+              0.3428571
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              0.3,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750664,
+              0.1750217,
+              0.175062
+            ],
+            "c": [
+              1,
+              0,
+              0.3428571
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              0.4,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750736,
+              0.1750225,
+              0.1750689
+            ],
+            "c": [
+              1,
+              0,
+              0.342857
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              0.5,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750736,
+              0.1750225,
+              0.1750689
+            ],
+            "c": [
+              1,
+              0,
+              0.342857
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              0.6,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750736,
+              0.1750225,
+              0.1750689
+            ],
+            "c": [
+              1,
+              0,
+              0.342857
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              0.7,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750736,
+              0.1750225,
+              0.1750689
+            ],
+            "c": [
+              1,
+              0,
+              0.342857
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              0.8,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750736,
+              0.1750225,
+              0.1750689
+            ],
+            "c": [
+              1,
+              0,
+              0.342857
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              0.9,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750736,
+              0.1750225,
+              0.1750689
+            ],
+            "c": [
+              1,
+              0,
+              0.342857
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          },
+          {
+            "p": [
+              1,
+              0,
+              0
+            ],
+            "r": [
+              0,
+              0,
+              0
+            ],
+            "s": [
+              0.1750736,
+              0.1750225,
+              0.1750689
+            ],
+            "c": [
+              1,
+              0,
+              0.342857
+            ],
+            "b": [
+              "when told by any keya then emit gravity-free letter",
+              "when told by any keya then become next"
+            ]
+          }
+        ],
+        "a": [
+          37
+        ]
+      }
+    ],
+    "n": "emitletter",
+    "inc": [
+      [
+        "letter",
+        "5c82aa08bc05ab054643c38b"
+      ]
+    ]
+  }
