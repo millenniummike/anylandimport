@@ -53,8 +53,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Part.cs" />
-     <Compile Include="Assets\Thing.cs" />
+     <Compile Include="Assets\Scripts\Part.cs" />
+     <Compile Include="Assets\Scripts\Thing.cs" />
      <None Include="Assets\JsonDotNet\link.xml" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/Users/mikgri/anylandimport/Unity Anyland Import/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
