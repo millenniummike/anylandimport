@@ -21,7 +21,7 @@ public class GUIEditor : Editor
     {
         b = EditorGUILayout.IntField("B - part number:", b);
         iterations = EditorGUILayout.IntField("Iterations:", iterations);
-        speed = EditorGUILayout.FloatField("Speed:", speed);
+        speed = EditorGUILayout.FloatField("Speed - forward direction:", speed);
         positionOffset = EditorGUILayout.Vector3Field("Position offset:", positionOffset);
         rotationOffset = EditorGUILayout.Vector3Field("Rotation offset:", rotationOffset);
         scaleOffset = EditorGUILayout.Vector3Field("Scale offset:", scaleOffset);
@@ -55,7 +55,10 @@ public class GUIEditor : Editor
                         newState.position.x = originalState.position.x + x;
                         newState.position.y = originalState.position.y + y;
                         newState.position.z = originalState.position.z + z;
-                        CreateObject(newState,cloneExistingB());
+                        newState.scale.x += scaleOffset.x;
+                        newState.scale.y += scaleOffset.y;
+                        newState.scale.z += scaleOffset.z;
+                        CreateObject(newState,b);
                     }
                 }
             }
@@ -105,17 +108,17 @@ public class GUIEditor : Editor
             p.states.Add(originalState);
         }
 
-        if(GUILayout.Button("Next State", GUILayout.Width(100), GUILayout.Height(20))){
-            currentState++;
-            Part p =Selection.activeGameObject.GetComponent<Part>();
-            if (currentState>=p.states.Count) {currentState=0;}
-            updateState();
-        }
-
         if(GUILayout.Button("Previous State", GUILayout.Width(100), GUILayout.Height(20))){
             currentState--;
             Part p =Selection.activeGameObject.GetComponent<Part>();
             if (currentState<0) {currentState=p.states.Count-1;}
+            updateState();
+        }
+
+        if(GUILayout.Button("Next State", GUILayout.Width(100), GUILayout.Height(20))){
+            currentState++;
+            Part p =Selection.activeGameObject.GetComponent<Part>();
+            if (currentState>=p.states.Count) {currentState=0;}
             updateState();
         }
         GUILayout.EndHorizontal();
