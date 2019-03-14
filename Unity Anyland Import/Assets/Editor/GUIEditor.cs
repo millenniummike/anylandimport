@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using System;
 
 [CustomEditor(typeof(Part)), CanEditMultipleObjects]
 public class GUIEditor : Editor
@@ -21,7 +21,7 @@ public class GUIEditor : Editor
     {
         b = EditorGUILayout.IntField("B - part number:", b);
         iterations = EditorGUILayout.IntField("Iterations:", iterations);
-        speed = EditorGUILayout.FloatField("Speed - forward direction:", speed);
+        speed = EditorGUILayout.FloatField("Speed:", speed);
         positionOffset = EditorGUILayout.Vector3Field("Position offset:", positionOffset);
         rotationOffset = EditorGUILayout.Vector3Field("Rotation offset:", rotationOffset);
         scaleOffset = EditorGUILayout.Vector3Field("Scale offset:", scaleOffset);
@@ -64,6 +64,33 @@ public class GUIEditor : Editor
             }
         }
 
+        if(GUILayout.Button("Create Clump", GUILayout.Width(100), GUILayout.Height(20))){
+        State originalState = cloneExistingState();
+        State newState = originalState;
+        int b = cloneExistingB();
+        System.Random random = new System.Random();
+        for (int c=0; c< iterations; c++){
+            float x = UnityEngine.Random.Range(0.0f, max.x);
+            newState.position.x = x;
+            float y = UnityEngine.Random.Range(0.0f, max.y);
+            newState.position.y = y;
+            float z = UnityEngine.Random.Range(0.0f, max.z);
+            newState.position.z = z;
+
+            float rx = UnityEngine.Random.Range(0.0f, rotationOffset.x);
+            newState.rotation.x = rx;
+            float ry = UnityEngine.Random.Range(0.0f, rotationOffset.y);
+            newState.rotation.y = ry;
+            float rz = UnityEngine.Random.Range(0.0f, rotationOffset.z);
+            newState.rotation.z = rz;
+
+            newState.scale.x += scaleOffset.x;
+            newState.scale.y += scaleOffset.y;
+            newState.scale.z += scaleOffset.z;
+            CreateObject(newState,b);
+            }
+        }
+
         if(GUILayout.Button("Create Circle", GUILayout.Width(100), GUILayout.Height(20))){
         State newState = cloneExistingState();
         float theta = 0f;
@@ -76,6 +103,15 @@ public class GUIEditor : Editor
                 newState.position.x = newState.position.x + x;
                 newState.position.y = newState.position.y + y;
                 CreateObject(newState,cloneExistingB());
+            }
+        }
+
+        if(GUILayout.Button("Spin", GUILayout.Width(100), GUILayout.Height(20))){
+        State newState = cloneExistingState();
+        for (int i = 0; i < iterations; i++)
+            {
+               newState.rotation.x = newState.rotation.x + speed;
+               CreateObject(newState,cloneExistingB());
             }
         }
         GUILayout.EndHorizontal();
