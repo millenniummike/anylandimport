@@ -24,6 +24,15 @@ public class Import : MonoBehaviour {
 			 GameObject parent = new GameObject();
 			 string name = json["n"].str;
 			 parent.name = name;
+			
+			 if (!parent.GetComponent<Thing>()) {
+				parent.AddComponent<Thing>();
+			}
+			 Thing thing = parent.GetComponent<Thing>();
+			foreach(JSONObject inc in json["inc"]){
+				thing.inc.Add(inc[0].str);
+				thing.inc.Add(inc[1].str);
+			}
 			foreach(JSONObject o in json["p"])
 			{
 				float px = o["s"][0]["p"][0].n;
@@ -57,11 +66,11 @@ public class Import : MonoBehaviour {
 					newObject.transform.SetParent(parent.transform);
 					newObject.name = ""+b;
 
-					//**TODO add inc */
 					newObject.tag = "Part";
 					if (!newObject.GetComponent<Part>()) {
 						newObject.AddComponent<Part>();
 					}
+
 					foreach(JSONObject s in o["s"]){
 						State state = new State(b);
 
@@ -105,7 +114,7 @@ public class Import : MonoBehaviour {
  					tempMaterial.color = new Color(cx,cy,cz);
  					rend.sharedMaterial = tempMaterial;
 				}
-        	}
+			}
         }
     }
 }

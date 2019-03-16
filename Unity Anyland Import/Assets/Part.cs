@@ -11,5 +11,4 @@ public class Part:MonoBehaviour
    public Part(){
        states = new List<State>();
    }
-
 }
