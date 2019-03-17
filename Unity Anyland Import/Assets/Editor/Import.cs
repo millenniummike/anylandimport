@@ -29,9 +29,11 @@ public class Import : MonoBehaviour {
 				parent.AddComponent<Thing>();
 			}
 			 Thing thing = parent.GetComponent<Thing>();
-			foreach(JSONObject inc in json["inc"]){
-				thing.inc.Add(inc[0].str);
-				thing.inc.Add(inc[1].str);
+			if (json["inc"]) {
+				foreach(JSONObject inc in json["inc"]){
+					thing.inc.Add(inc[0].str);
+					thing.inc.Add(inc[1].str);
+				}
 			}
 			foreach(JSONObject o in json["p"])
 			{

@@ -14,18 +14,19 @@ public class GUIEditor : Editor
     static float theta_scale = 0.02f;
     static Vector3 rotationOffset = new Vector3(0,0,0);
     static Vector3 scaleOffset = new Vector3(0,0,0);
-    static Vector3 positionOffset = new Vector3(0.2f,0.2f,0.2f);
-
     static Vector3 jitter = new Vector3(0.5f,0.5f,0.5f);
     static int iterations = 5;
     static float speed = 1f;
     static int currentState = 0;
+
+    static List<GameObject> newGameObjects;
+
+    static GameObject lastSelected;
     public override void OnInspectorGUI()
     {
         b = EditorGUILayout.IntField("B - part number:", b);
         iterations = EditorGUILayout.IntField("Iterations:", iterations);
         speed = EditorGUILayout.FloatField("Speed:", speed);
-        positionOffset = EditorGUILayout.Vector3Field("Position offset:", positionOffset);
         rotationOffset = EditorGUILayout.Vector3Field("Rotation offset:", rotationOffset);
         scaleOffset = EditorGUILayout.Vector3Field("Scale offset:", scaleOffset);
         jitter = EditorGUILayout.Vector3Field("Jitter:", jitter);
@@ -39,25 +40,33 @@ public class GUIEditor : Editor
         if(GUILayout.Button("Create Part", GUILayout.Width(100), GUILayout.Height(20))){
             State newState = new State(1);
             int part = b;
-            CreateObject(newState,b);
+            newGameObjects = new List<GameObject>();
+            lastSelected = Selection.activeGameObject;
+            GameObject go = CreateObject(newState,b);
+            newGameObjects.Add(go);
         }
 
         if(GUILayout.Button("Duplicate Part", GUILayout.Width(100), GUILayout.Height(20))){
-            CopyObject(Selection.activeGameObject);
+            GameObject go = CopyObject(Selection.activeGameObject);
+            newGameObjects = new List<GameObject>();
+            lastSelected = Selection.activeGameObject;
+            newGameObjects.Add(go);
         }
         GUILayout.EndHorizontal();
 
          GUILayout.BeginHorizontal();
         if(GUILayout.Button("Create Grid", GUILayout.Width(100), GUILayout.Height(20))){
             GameObject originalGo = Selection.activeGameObject;
-            for (float x = 0; x < max.x; x = x + spacing.x){
-                for (float y = 0; y < max.y; y = y + spacing.y){
-                    for (float z = 0; z < max.z; z = z + spacing.z){
+            newGameObjects = new List<GameObject>();
+            lastSelected = Selection.activeGameObject;
+            for (float x = 0; x < max.x; x++){
+                for (float y = 0; y < max.y; y++){
+                    for (float z = 0; z < max.z; z++){
                         GameObject go = CopyObject(Selection.activeGameObject);
                         Vector3 newPos = originalGo.transform.position;
-                        newPos.x += x;
-                        newPos.y += y;
-                        newPos.z += z;
+                        newPos.x += x * spacing.x;
+                        newPos.y += y * spacing.y;
+                        newPos.z += z * spacing.z;
                         Vector3 newScale = Selection.activeGameObject.transform.localScale;
                         newScale.x += scaleOffset.x;
                         newScale.y += scaleOffset.y;
@@ -65,41 +74,18 @@ public class GUIEditor : Editor
                         go.transform.position = newPos;
                         go.transform.localScale = newScale;
                         Selection.activeGameObject = go;
-                        saveState(go);
+                        saveStateAll(go);
+                        newGameObjects.Add(go);
                     }
                 }
             }
         }
 
-/* 
-        if(GUILayout.Button("Create Clump", GUILayout.Width(100), GUILayout.Height(20))){
-        GameObject originalGo = Selection.activeGameObject;
-        System.Random random = new System.Random();
-        for (int c=0; c< iterations; c++){
-            GameObject go = CopyObject(originalGo);
-            float x = UnityEngine.Random.Range(0.0f, max.x);
-            newState.position.x = x;
-            float y = UnityEngine.Random.Range(0.0f, max.y);
-            newState.position.y = y;
-            float z = UnityEngine.Random.Range(0.0f, max.z);
-            newState.position.z = z;
-
-            float rx = UnityEngine.Random.Range(0.0f, rotationOffset.x);
-            newState.rotation.x = rx;
-            float ry = UnityEngine.Random.Range(0.0f, rotationOffset.y);
-            newState.rotation.y = ry;
-            float rz = UnityEngine.Random.Range(0.0f, rotationOffset.z);
-            newState.rotation.z = rz;
-
-            newState.scale.x += scaleOffset.x;
-            newState.scale.y += scaleOffset.y;
-            newState.scale.z += scaleOffset.z;
-            }
-        }
-*/
         if(GUILayout.Button("Create Circle", GUILayout.Width(100), GUILayout.Height(20))){
         GameObject originalGo = Selection.activeGameObject;
         float theta = 0f;
+        newGameObjects = new List<GameObject>();
+        lastSelected = Selection.activeGameObject;
 
         for (int i = 0; i < circleSize; i++)
             {
@@ -117,11 +103,13 @@ public class GUIEditor : Editor
                 newScale.z += scaleOffset.z;
                 go.transform.position = newPos;
                 go.transform.localScale = newScale;
+                newGameObjects.Add(go);
 
             }
         }
 
         if(GUILayout.Button("Spin", GUILayout.Width(100), GUILayout.Height(20))){
+            newGameObjects = new List<GameObject>();
         for (int i = 0; i < iterations; i++)
             {
                 GameObject originalGo = Selection.activeGameObject;
@@ -130,26 +118,29 @@ public class GUIEditor : Editor
                 newRotation += rotationOffset;
                 go.transform.localEulerAngles = newRotation;
                 Selection.activeGameObject = go;
+                newGameObjects.Add(go);
             }
         }
         GUILayout.EndHorizontal();
 
         if(GUILayout.Button("Extrude"))
         {
+           newGameObjects = new List<GameObject>();
+           lastSelected = Selection.activeGameObject;
         for (int i = 0; i < iterations; i++)
             {
                 GameObject go = CopyObject(Selection.activeGameObject);
                 Vector3 newPosition = go.transform.TransformDirection(Vector3.forward * speed * go.transform.localScale.x);
-                Vector3 newRotation =  go.transform.localEulerAngles + rotationOffset;
                 Vector3 newScale = Selection.activeGameObject.transform.localScale;
                 newScale.x += scaleOffset.x;
                 newScale.y += scaleOffset.y;
                 newScale.z += scaleOffset.z;
                 go.transform.localPosition += newPosition;
                 go.transform.localScale = newScale;
-                go.transform.localEulerAngles = newRotation;
-                saveState(go);
+                go.transform.Rotate(rotationOffset);
+                saveStateAll(go);
                 Selection.activeGameObject = go;
+                newGameObjects.Add(go);
             }
         }
 
@@ -181,8 +172,11 @@ public class GUIEditor : Editor
         currentState = EditorGUILayout.IntField("Current State:", currentState);
 
         if(GUILayout.Button("Undo", GUILayout.Width(100), GUILayout.Height(20))){
-                // undo
-                }
+            foreach(GameObject go in newGameObjects){
+                DestroyImmediate(go);
+            }
+            Selection.activeGameObject = lastSelected;
+        }
         DrawDefaultInspector ();
     }
 
@@ -211,6 +205,19 @@ public class GUIEditor : Editor
         p.states[currentState] = c;
     }
 
+    static void saveStateAll(GameObject sourceGo){
+        int index = 0;
+        foreach (State s in sourceGo.GetComponent<Part>().states) {
+            Part p = sourceGo.GetComponent<Part>();
+            State o = s;
+            o.position =  sourceGo.transform.position;
+            o.rotation = sourceGo.transform.eulerAngles;
+            o.scale = sourceGo.transform.localScale;
+            p.states[index] = o;
+            index++;
+        }
+    }
+
     static GameObject CreateObject (State state, int b)
 	{
         GameObject objectLoaded = Resources.Load("" + b, typeof(GameObject)) as GameObject;
@@ -234,6 +241,7 @@ public class GUIEditor : Editor
 
     static GameObject CopyObject(GameObject originalGo){
 		GameObject go = Instantiate(originalGo);
+        go.transform.parent = originalGo.transform.parent;
         Selection.activeGameObject = go;
         go.name = originalGo.name;
         return go;
