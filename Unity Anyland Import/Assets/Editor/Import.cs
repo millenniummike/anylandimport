@@ -16,23 +16,27 @@ public class Import : MonoBehaviour {
     {
 		string path = EditorUtility.OpenFilePanel("Open json", "", "json");
         if (path.Length != 0)
-        {		
-			using (StreamReader r = new StreamReader(path))
-			{
-			string jsontext = r.ReadToEnd();
-			 var json = new JSONObject(jsontext);
-			 GameObject parent = new GameObject();
-			 string name = json["n"].str;
-			 parent.name = name;
-			
-			 if (!parent.GetComponent<Thing>()) {
-				parent.AddComponent<Thing>();
-			}
-			 Thing thing = parent.GetComponent<Thing>();
-			foreach(JSONObject inc in json["inc"]){
-				thing.inc.Add(inc[0].str);
-				thing.inc.Add(inc[1].str);
-			}
+        {
+            using (StreamReader r = new StreamReader(path))
+            {
+                string jsontext = r.ReadToEnd();
+                var json = new JSONObject(jsontext);
+                GameObject parent = new GameObject();
+                string name = json["n"].str;
+                parent.name = name;
+
+                if (!parent.GetComponent<Thing>())
+                {
+                    parent.AddComponent<Thing>();
+                }
+                Thing thing = parent.GetComponent<Thing>();
+                if (json["inc"]) {
+                    foreach (JSONObject inc in json["inc"])
+                    {
+                        thing.inc.Add(inc[0].str);
+                        thing.inc.Add(inc[1].str);
+                    }
+                }
 			foreach(JSONObject o in json["p"])
 			{
 				float px = o["s"][0]["p"][0].n;
