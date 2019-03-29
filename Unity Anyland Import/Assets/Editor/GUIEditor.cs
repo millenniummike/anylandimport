@@ -14,9 +14,9 @@ public class GUIEditor : Editor
     static float theta_scale = 0.02f;
     static Vector3 rotationOffset = new Vector3(0,0,0);
     static Vector3 scaleOffset = new Vector3(0,0,0);
-    static Vector3 positionOffset = new Vector3(0.2f,0.2f,0.2f);
+    static Vector3 positionOffset = new Vector3(0f,0f,0f);
 
-    static Vector3 jitter = new Vector3(0.5f,0.5f,0.5f);
+    static Vector3 jitter = new Vector3(0f,0f,0f);
     static int iterations = 5;
     static float speed = 1f;
     static int currentState = 0;
@@ -50,14 +50,19 @@ public class GUIEditor : Editor
          GUILayout.BeginHorizontal();
         if(GUILayout.Button("Create Grid", GUILayout.Width(100), GUILayout.Height(20))){
             GameObject originalGo = Selection.activeGameObject;
-            for (float x = 0; x < max.x; x = x + spacing.x){
-                for (float y = 0; y < max.y; y = y + spacing.y){
-                    for (float z = 0; z < max.z; z = z + spacing.z){
+            for (float x = 0; x < max.x; x = x + 1){
+                for (float y = 0; y < max.y; y = y + 1){
+                    for (float z = 0; z < max.z; z = z + 1){
                         GameObject go = CopyObject(Selection.activeGameObject);
                         Vector3 newPos = originalGo.transform.position;
-                        newPos.x += x;
-                        newPos.y += y;
-                        newPos.z += z;
+                        newPos.x += x * spacing.x;
+                        newPos.y += y * spacing.y;
+                        newPos.z += z * spacing.z;
+
+                        newPos.x += positionOffset.x;
+                        newPos.y += positionOffset.y;
+                        newPos.z += positionOffset.z;
+
                         Vector3 newScale = Selection.activeGameObject.transform.localScale;
                         newScale.x += scaleOffset.x;
                         newScale.y += scaleOffset.y;
@@ -71,32 +76,6 @@ public class GUIEditor : Editor
             }
         }
 
-/* 
-        if(GUILayout.Button("Create Clump", GUILayout.Width(100), GUILayout.Height(20))){
-        GameObject originalGo = Selection.activeGameObject;
-        System.Random random = new System.Random();
-        for (int c=0; c< iterations; c++){
-            GameObject go = CopyObject(originalGo);
-            float x = UnityEngine.Random.Range(0.0f, max.x);
-            newState.position.x = x;
-            float y = UnityEngine.Random.Range(0.0f, max.y);
-            newState.position.y = y;
-            float z = UnityEngine.Random.Range(0.0f, max.z);
-            newState.position.z = z;
-
-            float rx = UnityEngine.Random.Range(0.0f, rotationOffset.x);
-            newState.rotation.x = rx;
-            float ry = UnityEngine.Random.Range(0.0f, rotationOffset.y);
-            newState.rotation.y = ry;
-            float rz = UnityEngine.Random.Range(0.0f, rotationOffset.z);
-            newState.rotation.z = rz;
-
-            newState.scale.x += scaleOffset.x;
-            newState.scale.y += scaleOffset.y;
-            newState.scale.z += scaleOffset.z;
-            }
-        }
-*/
         if(GUILayout.Button("Create Circle", GUILayout.Width(100), GUILayout.Height(20))){
         GameObject originalGo = Selection.activeGameObject;
         float theta = 0f;
@@ -121,37 +100,29 @@ public class GUIEditor : Editor
             }
         }
 
-        if(GUILayout.Button("Spin", GUILayout.Width(100), GUILayout.Height(20))){
-        for (int i = 0; i < iterations; i++)
-            {
-                GameObject originalGo = Selection.activeGameObject;
-                GameObject go = CopyObject(originalGo);
-                Vector3 newRotation = go.transform.localEulerAngles;
-                newRotation += rotationOffset;
-                go.transform.localEulerAngles = newRotation;
-                Selection.activeGameObject = go;
-            }
-        }
-        GUILayout.EndHorizontal();
-
         if(GUILayout.Button("Extrude"))
         {
         for (int i = 0; i < iterations; i++)
             {
                 GameObject go = CopyObject(Selection.activeGameObject);
                 Vector3 newPosition = go.transform.TransformDirection(Vector3.forward * speed * go.transform.localScale.x);
-                Vector3 newRotation =  go.transform.localEulerAngles + rotationOffset;
                 Vector3 newScale = Selection.activeGameObject.transform.localScale;
                 newScale.x += scaleOffset.x;
                 newScale.y += scaleOffset.y;
                 newScale.z += scaleOffset.z;
+
+                if (newScale.x<0) { newScale.x = 0; }
+                if (newScale.y < 0) { newScale.y = 0; }
+                if (newScale.z < 0) { newScale.z = 0; }
                 go.transform.localPosition += newPosition;
                 go.transform.localScale = newScale;
-                go.transform.localEulerAngles = newRotation;
+                go.transform.Rotate(rotationOffset.x, rotationOffset.y, rotationOffset.z, Space.Self);
                 saveState(go);
                 Selection.activeGameObject = go;
             }
         }
+
+        GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         if(GUILayout.Button("Add State", GUILayout.Width(100), GUILayout.Height(20))){
