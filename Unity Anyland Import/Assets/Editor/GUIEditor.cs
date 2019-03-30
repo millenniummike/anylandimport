@@ -172,10 +172,10 @@ public class GUIEditor : Editor
         currentState = EditorGUILayout.IntField("Current State:", currentState);
 
         if(GUILayout.Button("Undo", GUILayout.Width(100), GUILayout.Height(20))){
+            Selection.activeGameObject = lastSelected;
             foreach(GameObject go in newGameObjects){
                 DestroyImmediate(go);
             }
-            Selection.activeGameObject = lastSelected;
         }
         DrawDefaultInspector ();
     }
